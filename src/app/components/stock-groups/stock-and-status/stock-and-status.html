@@ -1,0 +1,43 @@
+<article
+  class="stock-card"
+  [class.warning]="stockGroup.status === 'WARNING'"
+  role="link"
+  tabindex="0"
+  (click)="goToStockItemsPage(stockGroup.name)"
+  (keydown.enter)="goToStockItemsPage(stockGroup.name)"
+>
+  <div class="stock-card-header">
+    <h3>{{ stockGroup.name }}</h3>
+    <div class="stock-actions">
+      @if (stockGroup.status === 'WARNING') {
+        <i class="bi bi-exclamation-circle warning-icon" aria-hidden="true"></i>
+      }
+      <button type="button" aria-label="Excluir grupo" (click)="$event.stopPropagation()">
+        <i class="bi bi-trash" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
+
+  <div class="metric-row">
+    <span>
+      <i class="bi bi-box-seam" aria-hidden="true"></i>
+      Itens
+    </span>
+    <strong>{{ getDisplayedTotalItems() }}</strong>
+  </div>
+
+  <div class="metric-row">
+    <span>
+      <i class="bi bi-currency-dollar" aria-hidden="true"></i>
+      Valor
+    </span>
+    <strong>{{ formatCurrency(getDisplayedTotalValue()) }}</strong>
+  </div>
+
+  <div class="divider"></div>
+
+  <div class="low-stock-row">
+    <span>Estoque baixo</span>
+    <strong>{{ stockGroup.lowStock }} itens</strong>
+  </div>
+</article>

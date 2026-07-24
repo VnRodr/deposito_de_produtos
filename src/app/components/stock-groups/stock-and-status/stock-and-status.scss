@@ -1,0 +1,125 @@
+.stock-card {
+  min-height: 215px;
+  padding: 18px 16px 19px;
+  border: 1px solid #262b2d;
+  border-radius: 6px;
+  background: #181a1b;
+  color: #d6d0c8;
+  cursor: pointer;
+}
+
+.stock-card:focus-visible {
+  outline: 2px solid #49a8ff;
+  outline-offset: 3px;
+}
+
+.stock-card.warning {
+  border-color: #815000;
+  background: #4f3000;
+}
+
+.stock-card-header {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 15px;
+}
+
+h3 {
+  margin: 0;
+  color: #dcd5cc;
+  font-size: 1.95rem;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.stock-actions {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex: 0 0 auto;
+}
+
+.stock-actions button {
+  width: 28px;
+  height: 28px;
+  padding: 0;
+  border: 1px solid #9f1d28;
+  border-radius: 5px;
+  background: transparent;
+  color: #d02f3a;
+  display: grid;
+  place-items: center;
+  line-height: 1;
+}
+
+.stock-actions button i {
+  font-size: 16px;
+  display: block;
+  line-height: 1;
+}
+
+.warning-icon {
+  font-size: 20px;
+  display: block;
+  color: #ff9800;
+  line-height: 1;
+}
+
+.metric-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin: 17px 0;
+  color: #aaa39b;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.metric-row span {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  line-height: 1;
+}
+
+.metric-row i {
+  font-size: 18px;
+  display: block;
+  line-height: 1;
+}
+
+.metric-row strong {
+  color: #c2bcb5;
+  font-weight: 700;
+  text-align: right;
+  line-height: 1;
+}
+
+.divider {
+  height: 1px;
+  margin: 20px 0 19px;
+  background: #303436;
+}
+
+.warning .divider {
+  background: #67511f;
+}
+
+.low-stock-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: #ff9800;
+  font-size: 1.05rem;
+  font-weight: 700;
+  line-height: 1;
+}
+
+.low-stock-row strong {
+  font-weight: 700;
+}

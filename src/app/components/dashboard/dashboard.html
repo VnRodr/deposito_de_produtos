@@ -1,0 +1,120 @@
+<header class="inventory-header">
+  <div class="brand">
+    <i class="bi bi-box-seam brand-icon" aria-hidden="true"></i>
+    <h1>Sistema de Estoque</h1>
+  </div>
+
+  <div>
+    <button pButton type="button" class="new-group-button">
+      <i class="bi bi-plus-lg" aria-hidden="true"></i>
+      <span>Novo Grupo</span>
+    </button>
+    <div>
+      <p-dialog
+        header="Criar novo grupo de estoque"
+        [modal]="true"
+        [(visible)]="visible"
+        [style]="{ width: '26rem' }"
+        [contentStyle]="{ maxHeight: '70vh', overflow: 'auto' }"
+        [appendTo]="'body'"
+        [dismissableMask]="true"
+        styleClass="text-start create-stock-dialog">
+        <div class="d-flex flex-column border-top">
+          <div class="mb-2 mt-2">
+            <label for="nameGroup" class="font-semibold form-label">Nome do grupo</label>
+            <input
+              pInputText
+              id="nameGroup"
+              class="form-control"
+              autocomplete="off"
+              [class.is-invalid]="submitAttempted && stockGroupDraft.name.trim().length === 0"
+              [(ngModel)]="stockGroupDraft.name"
+              name="nameGroup"
+            />
+            <div class="invalid-feedback">Informe o nome do grupo.</div>
+          </div>
+
+          <div class="border-top py-2">Responsável pelo estoque</div>
+
+          <div class="d-flex justify-content-center flex-column">
+            <div>
+              <label for="responsible" class="font-semibold form-label">Nome Completo</label>
+              <input
+                pInputText
+                id="responsible"
+                class="form-control"
+                autocomplete="off"
+                [class.is-invalid]="
+                  submitAttempted && stockGroupDraft.responsible.name.trim().length === 0
+                "
+                [(ngModel)]="stockGroupDraft.responsible.name"
+              />
+              <div class="invalid-feedback">Informe o nome.</div>
+            </div>
+            <div class="mt-1">
+              <label for="email" class="font-semibold form-label">Email</label>
+              <input
+                type = "email"
+                pInputText
+                id="email"
+                class="form-control"
+                autocomplete="off"
+                #email = "ngModel"
+                [class.is-invalid]=
+                " submitAttempted &&  stockGroupDraft.responsible.email.trim().length === 0"
+                [(ngModel)]="stockGroupDraft.responsible.email"
+              />
+              <div class="invalid-feedback">Informe o email.</div>
+            </div>
+            <div class="mt-1">
+              <label for="phone" class="font-semibold form-label">Telefone</label>
+              <p-inputmask
+                [styleClass]="
+                  submitAttempted && !isPhoneValid(stockGroupDraft.responsible.phone)
+                    ? 'w-100 phone-mask is-invalid'
+                    : 'w-100 phone-mask'
+                "
+                mask="(99) 99999-9999"
+                placeholder="(00) 00000-0000"
+                id="phone"
+                autocomplete="off"
+                [style]="{ width: '100%' }"
+                [(ngModel)]="stockGroupDraft.responsible.phone"
+              />
+              <div class="invalid-feedback">Informe o telefone.</div>
+            </div>
+            <div class="mt-1">
+              <label for="department" class="font-semibold form-label">Departamento</label>
+              <input
+                pInputText
+                id="department"
+                class="form-control"
+                autocomplete="off"
+                [class.is-invalid]="
+                  submitAttempted && stockGroupDraft.responsible.department.trim().length === 0
+                "
+                [(ngModel)]="stockGroupDraft.responsible.department"
+              />
+              <div class="invalid-feedback">Informe o departamento.</div>
+            </div>
+          </div>
+        </div>
+        <ng-template pTemplate="footer">
+          <button
+            pButton
+            label="Cancelar"
+            severity="secondary"
+            (click)="visible = false"
+            class="me-2"
+          ></button>
+          <button
+            pButton
+            label="Criar grupo"
+            [disabled]="!isFormValid()"
+            (click)="onConfirm()"
+          ></button>
+        </ng-template>
+      </p-dialog>
+    </div>
+  </div>
+</header>

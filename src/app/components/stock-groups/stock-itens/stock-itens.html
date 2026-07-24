@@ -1,0 +1,281 @@
+<div class="management-page">
+  <header class="management-header">
+    <div class="stock-group-label">
+      <button type="button" class="back-button" aria-label="Voltar" (click)="onArrowClick()">
+        <i class="bi bi-arrow-left" aria-hidden="true"></i>
+      </button>
+      <i class="bi bi-box-seam group-icon" aria-hidden="true"></i>
+      <span>{{ stockGroupName }}</span>
+    </div>
+    <h1>Gestão de Estoque</h1>
+  </header>
+
+  <main class="management-content">
+    <section class="management-main">
+      <section class="filter-panel">
+        <h2>
+          <i class="bi bi-funnel" aria-hidden="true"></i>
+          Filtros
+        </h2>
+
+        <div class="filter-grid">
+          <label>
+            <span>Buscar</span>
+            <div class="search-control">
+              <i class="bi bi-search" aria-hidden="true"></i>
+              <input pInputText [(ngModel)]="searchText" placeholder="Nome ou SKU..." />
+            </div>
+          </label>
+
+          <label>
+            <span>Categoria</span>
+            <select>
+              <option>Todas as categorias</option>
+            </select>
+          </label>
+
+          <label>
+            <span>Status do Estoque</span>
+            <select>
+              <option>Todos</option>
+            </select>
+          </label>
+        </div>
+      </section>
+
+      <section class="items-panel">
+        <div class="items-panel-header">
+          <h2>
+            Itens do Estoque
+            <span>{{ itemList.length }}</span>
+          </h2>
+          <button pButton type="button" class="add-item-button" (click)="showCreateItemForm()">
+            <i class="bi bi-plus-lg" aria-hidden="true"></i>
+            <span>Adicionar Item</span>
+          </button>
+        </div>
+
+        <div class="table-wrapper">
+          <table class="stock-itens-table">
+            <thead>
+              <tr>
+                <th scope="col">Nome do Item</th>
+                <th scope="col">Categoria</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Valor Unit.</th>
+                <th scope="col">Valor Total</th>
+                <th scope="col">Status</th>
+                <th scope="col">Ações</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of itemList; track item) {
+                <tr>
+                  <td class="item-name">{{ item.name }}</td>
+                  <td>
+                    <span class="category-pill">{{ item.category }}</span>
+                  </td>
+                  <td>
+                    <strong [class.low-quantity]="isLowStock(item)">{{ item.quantity }}</strong>
+                    <small>Min: {{ item.lowQuantity }}</small>
+                  </td>
+                  <td>{{ formatCurrency(item.unitValue) }}</td>
+                  <td>{{ formatCurrency(getItemTotalValue(item)) }}</td>
+                  <td>
+                    @if (isLowStock(item)) {
+                      <span class="status-pill low">
+                        <i class="bi bi-exclamation-circle" aria-hidden="true"></i>
+                        Baixo
+                      </span>
+                    } @else {
+                      <span class="status-pill normal">Normal</span>
+                    }
+                  </td>
+                  <td class="actions-cell">
+                    <button type="button" class="icon-button edit" aria-label="Editar item" (click)="openEdit(item)">
+                      <i class="bi bi-pencil-square" aria-hidden="true"></i>
+                    </button>
+                    <button type="button" class="icon-button remove" aria-label="Remover item" (click)="openRemove(item)">
+                      <i class="bi bi-trash" aria-hidden="true"></i>
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7" class="empty-row">Nenhum item encontrado.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </section>
+
+    <aside class="summary-panel">
+      <h2>Resumo</h2>
+      <div class="summary-row">
+        <span>Total de Itens</span>
+        <strong>{{ getTotalItems() }}</strong>
+      </div>
+      <div class="summary-row">
+        <span>Valor Total</span>
+        <strong>{{ formatCurrency(getTotalValue()) }}</strong>
+      </div>
+      <div class="summary-row low">
+        <span>Estoque Baixo</span>
+        <strong>{{ getLowStockTotal() }}</strong>
+      </div>
+    </aside>
+  </main>
+
+  <p-dialog
+    header="Criar novo item"
+    [modal]="true"
+    [(visible)]="visible"
+    [style]="{ width: '26rem' }"
+    [contentStyle]="{ maxHeight: '70vh', overflow: 'auto' }"
+    [appendTo]="'body'"
+    styleClass="text-start create-stock-dialog"
+  >
+    <div class="d-flex flex-column">
+      <div class="mb-2 mt-2">
+        <label for="itemName" class="font-semibold form-label">Informe o nome do item</label>
+        <input
+          pInputText
+          id="itemName"
+          class="form-control"
+          autocomplete="off"
+          name="itemName"
+          [(ngModel)]="editDraft.name"
+        />
+      </div>
+    </div>
+
+    <div class="mb-2 mt-1">
+      <label for="itemCategory" class="font-semibold form-label">Informe a categoria do produto</label>
+      <input
+        pInputText
+        id="itemCategory"
+        class="form-control"
+        autocomplete="off"
+        name="itemCategory"
+        [(ngModel)]="editDraft.category"
+      />
+    </div>
+
+    <div class="mb-2 mt-2">
+      <label for="itemUnitValue" class="font-semibold form-label">Informe o valor por unidade (em reais)</label>
+      <input
+        pInputText
+        id="itemUnitValue"
+        class="form-control"
+        autocomplete="off"
+        name="itemUnitValue"
+        [(ngModel)]="editDraft.unitValue"
+      />
+    </div>
+
+    <div class="mb-2 mt-2">
+      <label for="itemQuantity" class="font-semibold form-label">Informe a quantidade inicial(unidades)</label>
+      <input
+        pInputText
+        id="itemQuantity"
+        class="form-control"
+        autocomplete="off"
+        name="itemQuantity"
+        [(ngModel)]="editDraft.quantity"
+      />
+    </div>
+
+    <div class="mb-2 mt-2">
+      <label for="itemLowQuantity" class="font-semibold form-label">Informe a quantidade de alerta do estoque</label>
+      <input
+        pInputText
+        id="itemLowQuantity"
+        class="form-control"
+        autocomplete="off"
+        name="itemLowQuantity"
+        [(ngModel)]="editDraft.lowQuantity"
+      />
+    </div>
+    <ng-template pTemplate="footer">
+      <button pButton label="Cancelar" severity="secondary" (click)="visible = false"></button>
+      <button pButton label="Criar item" (click)="onConfirm()"></button>
+    </ng-template>
+  </p-dialog>
+</div>
+
+<p-dialog
+  header="Editar item"
+  [(visible)]="editVisible"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: '28rem' }"
+>
+  <div class="d-flex flex-column gap-2">
+    <div>
+      <label for="editName" class="form-label">Nome do item</label>
+      <input id="editName" pInputText class="w-100" [(ngModel)]="editDraft.name" />
+    </div>
+    <div>
+      <label for="editCategory" class="form-label">Categoria</label>
+      <input id="editCategory" pInputText class="w-100" [(ngModel)]="editDraft.category" />
+    </div>
+    <div>
+      <label for="editQuantity" class="form-label">Quantidade</label>
+      <p-inputNumber
+        inputId="editQuantity"
+        class="w-100"
+        [(ngModel)]="editDraft.quantity"
+      ></p-inputNumber>
+    </div>
+    <div>
+      <label for="editUnitValue" class="form-label">Valor por unidade</label>
+      <p-inputNumber
+        inputId="editUnitValue"
+        class="w-100"
+        [(ngModel)]="editDraft.unitValue"
+        mode="currency"
+        currency="BRL"
+      ></p-inputNumber>
+    </div>
+    <div>
+      <label for="editLowQuantity" class="form-label">Quantidade mínima</label>
+      <p-inputNumber
+        inputId="editLowQuantity"
+        class="w-100"
+        [(ngModel)]="editDraft.lowQuantity"
+      ></p-inputNumber>
+    </div>
+  </div>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      type="button"
+      label="Cancelar"
+      class="p-button-text"
+      (click)="editVisible = false"
+    ></button>
+    <button pButton type="button" label="Salvar" (click)="saveEdit()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-dialog
+  header="Remover item"
+  [(visible)]="removeVisible"
+  [modal]="true"
+  [draggable]="false"
+  [style]="{ width: '22rem' }"
+>
+  <p class="mb-3">Remove {{ selectedItem === '' ? '' : selectedItem.name }}?</p>
+  <ng-template pTemplate="footer">
+    <button
+      pButton
+      type="button"
+      label="Cancelar"
+      class="p-button-text"
+      (click)="cancelRemove()"
+    ></button>
+    <button pButton type="button" label="Remover" severity="danger"></button>
+  </ng-template>
+</p-dialog>

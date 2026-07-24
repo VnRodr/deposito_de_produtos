@@ -1,0 +1,12 @@
+<section class="stock-groups-section">
+  <h2>Grupos de Estoque</h2>
+  <div class="stock-groups-grid">
+    @for (stockGroup of stockGroupList; track stockGroup.name) {
+      <app-stock-and-status
+        [stockGroup]="stockGroup"
+        [totalItems]="totalUniqueItems"
+        [totalValue]="totalStockValue"
+      ></app-stock-and-status>
+    }
+  </div>
+</section>

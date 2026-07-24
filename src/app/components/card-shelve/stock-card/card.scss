@@ -1,0 +1,43 @@
+.summary-card {
+  min-height: 96px;
+  padding: 18px 17px;
+  border: 1px solid #262b2d;
+  border-radius: 7px;
+  background: #181a1b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+p {
+  margin: 0 0 10px;
+  color: #878787;
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+strong {
+  color: #beb9b2;
+  font-size: 1.35rem;
+  font-weight: 700;
+}
+
+.summary-icon {
+  width: 51px;
+  height: 51px;
+  border-radius: 8px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+}
+
+.summary-icon i {
+  font-size: 27px;
+  line-height: 1;
+}
+
+.package {
+  background: #20252a;
+  color: #49a8ff;
+}
